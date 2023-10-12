@@ -93,7 +93,7 @@ class AutoRun:
     @staticmethod
     def enter(boy, e):
 
-        if boy.action == 2: # idle 모션이 기준이 됨.
+        if boy.action == 2:  # idle 모션이 기준이 됨.
             boy.dir = -1
             boy.action = 0
 
@@ -124,7 +124,7 @@ class AutoRun:
 
         elif boy.x < 1:
             boy.action = 1
-            boy.dir = 1 # 방향 전환
+            boy.dir = 1  # 방향 전환
 
     @staticmethod
     def draw(boy):
