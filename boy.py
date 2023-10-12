@@ -28,6 +28,7 @@ def left_down(e):
 def left_up(e):
     return e[0] == 'INPUT' and e[1].type == SDL_KEYUP and e[1].key == SDLK_LEFT
 
+
 def key_a_down(e):
     return e[0] == 'INPUT' and e[1].type == SDL_KEYDOWN and e[1].key == SDLK_a
 
@@ -92,15 +93,21 @@ class AutoRun:
     @staticmethod
     def enter(boy, e):
 
-        # boy dir과 action 코드
+        if boy.action == 2: # idle 모션이 기준이 됨.
+            boy.dir = -1
+            boy.action = 0
 
+        elif boy.action == 3:
+            boy.dir = 1
+            boy.action = 1
+
+        boy.speed = 10  # 소년 속도 변수
         boy.scale = 2  # 크기를 2배 확대
         boy.wait_time = get_time()  # 시간 저장
 
     @staticmethod
     def exit(boy, e):
         pass
-
 
     @staticmethod
     def do(boy):
@@ -109,12 +116,20 @@ class AutoRun:
         if get_time() - boy.wait_time >= 5:  # 5초 이상 경과 하면
             boy.state_machine.handle_event(('TIME_OUT', 0))
 
-        # boy.x 이동 코드
+        boy.x += boy.dir * boy.speed  # boy 속도 증가
+
+        if boy.x > 799:
+            boy.action = 0
+            boy.dir = -1  # 방향 전환
+
+        elif boy.x < 1:
+            boy.action = 1
+            boy.dir = 1 # 방향 전환
 
     @staticmethod
     def draw(boy):
-        # 방향에 맞게 처리
-        boy.image.clip_draw(boy.frame * 100, boy.action * 100, 100, 100, boy.x, boy.y, 100 * boy.scale, 100 * boy.scale)
+        boy.image.clip_draw(boy.frame * 100, boy.action * 100, 100, 100, boy.x, boy.y + 30, 100 * boy.scale,
+                            100 * boy.scale)
 
 
 class Run:
@@ -141,7 +156,6 @@ class Run:
         boy.image.clip_draw(boy.frame * 100, boy.action * 100, 100, 100, boy.x, boy.y)
 
 
-
 class StateMachine:
     def __init__(self, boy):
         self.boy = boy
@@ -149,8 +163,8 @@ class StateMachine:
         self.table = {
             Idle: {right_down: Run, left_down: Run, right_up: Run, left_up: Run, time_out: Sleep, key_a_down: AutoRun},
             Run: {right_down: Idle, left_down: Idle, right_up: Idle, left_up: Idle},
-            Sleep: {right_down: Run, left_down: Run, right_up: Run, space_down: Idle},
-            AutoRun: {right_down: Run, left_down: Run, right_up: Run, left_up: Run, time_out: Idle}
+            Sleep: {right_down: Run, left_down: Run, right_up: Run, left_up: Run, space_down: Idle},
+            AutoRun: {right_down: Run, left_down: Run, right_up: Run, left_up: Run, time_out: Idle},
         }
 
     def start(self):
