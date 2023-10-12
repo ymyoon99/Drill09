@@ -116,7 +116,7 @@ class AutoRun:
         if get_time() - boy.wait_time >= 5:  # 5초 이상 경과 하면
             boy.state_machine.handle_event(('TIME_OUT', 0))
 
-        boy.x += boy.dir * boy.speed  # boy 속도 증가
+        boy.x += boy.dir * boy.speed  # boy 속도 만큼 비례 증가
 
         if boy.x > 799:
             boy.action = 0
