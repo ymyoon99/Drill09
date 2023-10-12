@@ -91,7 +91,11 @@ class AutoRun:
 
     @staticmethod
     def enter(boy, e):
-        pass
+
+        # boy dir과 action 코드
+
+        boy.scale = 2  # 크기를 2배 확대
+        boy.wait_time = get_time()  # 시간 저장
 
     @staticmethod
     def exit(boy, e):
@@ -101,13 +105,16 @@ class AutoRun:
     @staticmethod
     def do(boy):
         boy.frame = (boy.frame + 1) % 8
-        if get_time() - boy.wait_time > 5:  # 5초 이상 경과하면
+
+        if get_time() - boy.wait_time >= 5:  # 5초 이상 경과 하면
             boy.state_machine.handle_event(('TIME_OUT', 0))
+
+        # boy.x 이동 코드
 
     @staticmethod
     def draw(boy):
-        pass
-        # boy.image.clip_draw(boy.frame * 100, boy.action * 100, 100, 100, boy.x, boy.y)
+        # 방향에 맞게 처리
+        boy.image.clip_draw(boy.frame * 100, boy.action * 100, 100, 100, boy.x, boy.y, 100 * boy.scale, 100 * boy.scale)
 
 
 class Run:
